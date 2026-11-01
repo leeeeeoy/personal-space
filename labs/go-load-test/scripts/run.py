@@ -7,6 +7,7 @@ import os
 from pathlib import Path
 import random
 import signal
+import shutil
 import subprocess
 import time
 import urllib.request
@@ -87,12 +88,26 @@ def load_cmd(endpoint, workers, duration="10s", keep=True):
     return ["./bin/load", "-url", f"http://127.0.0.1:8087/{endpoint}", "-workers", str(workers), "-duration", duration, "-timeout", "2s", f"-keep-alive={str(keep).lower()}"]
 
 
+def result_directory(value):
+    directory = (ROOT / value).resolve()
+    results = (ROOT / "results").resolve()
+    if directory == results or not directory.is_relative_to(results):
+        raise ValueError("output must be a new directory under this Lab's results/")
+    return directory
+
+
 def main():
     parser = argparse.ArgumentParser()
     parser.add_argument("--out", default="results/2026-10-14")
-    parser.add_argument("--hey", help="optional installed hey executable")
+    parser.add_argument("--hey", action="store_true", help="also run the installed hey command from PATH")
     args = parser.parse_args()
-    result_dir = ROOT / args.out
+    hey = shutil.which("hey") if args.hey else None
+    if args.hey and not hey:
+        parser.error("--hey requires the installed hey command on PATH")
+    try:
+        result_dir = result_directory(args.out)
+    except ValueError as error:
+        parser.error(str(error))
     result_dir.mkdir(parents=True, exist_ok=False)
     environment = {
         "os": output(["sw_vers"]), "go": output(["go", "version"]), "python": output(["python3", "--version"]),
@@ -102,7 +117,7 @@ def main():
         "seed": 20261014, "warmup_s_per_condition": 2, "rest_s": 2, "admission_s": 10, "repeats": 3,
         "source_sha256": {str(p.relative_to(ROOT)): hashlib.sha256(p.read_bytes()).hexdigest() for p in sorted(ROOT.rglob("*.go"))},
         "plan_sha256": hashlib.sha256((ROOT / "PLAN.md").read_bytes()).hexdigest(),
-        "hey": output(["go", "version", "-m", args.hey]).replace(args.hey, "hey") if args.hey else None,
+        "hey": output(["go", "version", "-m", hey]).replace(hey, "hey") if hey else None,
     }
     (result_dir / "environment.json").write_text(json.dumps(environment, indent=2) + "\n")
     commands = []
@@ -113,6 +128,7 @@ def main():
         commands.append({"label": "baseline-server", "argv": server_cmd, "env": {"GOMAXPROCS": "12"}})
         try:
             for round_number in range(1, 4):
+                # Seeded order is experiment input, not a security token.
                 order = CONDITIONS.copy(); random.Random(20261014 + round_number).shuffle(order)
                 for endpoint, workers in order:
                     key = f"{endpoint}-c{workers}-r{round_number}"
@@ -123,12 +139,12 @@ def main():
             for repeat in range(1, 4):
                 measure(result_dir, f"no-reuse-fast-c50-r{repeat}", load_cmd("fast", 50, keep=False), server, writer, commands, "no-reuse", "fast", 50)
                 samples.flush(); time.sleep(2)
-            if args.hey:
+            if hey:
                 for endpoint, workers in [("fast", 50), ("slow", 10), ("cpu", 8)]:
                     measure(result_dir, f"warm-hey-{endpoint}", load_cmd(endpoint, workers, "2s"), server, writer, commands, "warmup", endpoint, workers)
                     time.sleep(2)
                     for repeat in range(1, 4):
-                        cmd = [args.hey, "-z", "10s", "-c", str(workers), "-t", "2", f"http://127.0.0.1:8087/{endpoint}"]
+                        cmd = [hey, "-z", "10s", "-c", str(workers), "-t", "2", f"http://127.0.0.1:8087/{endpoint}"]
                         measure(result_dir, f"hey-{endpoint}-c{workers}-r{repeat}", cmd, server, writer, commands, "hey", endpoint, workers)
                         samples.flush(); time.sleep(2)
         finally:

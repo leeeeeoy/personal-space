@@ -5,6 +5,7 @@ import json
 import os
 from pathlib import Path
 import signal
+import shutil
 import re
 import subprocess
 import time
@@ -111,8 +112,8 @@ def main():
                 label="aux-fast-c50-"+("reuse" if keep else "no-reuse")
                 measure(AUDIT,label,run.load_cmd("fast",50,keep=keep),server,writer,"connection-comparison","fast",50)
                 stream.flush();time.sleep(2)
-            hey=Path("/private/tmp/leeeeeoy-phase4-tools/hey")
-            if hey.exists():
+            hey=shutil.which("hey")
+            if hey:
                 for endpoint,workers in [("fast",50),("slow",10),("cpu",8)]:
                     command=[str(hey),"-z","10s","-c",str(workers),"-t","2",f"http://127.0.0.1:8087/{endpoint}"]
                     measure(AUDIT,f"hey-{endpoint}-c{workers}",command,server,writer,"hey",endpoint,workers)

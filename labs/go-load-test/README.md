@@ -16,7 +16,7 @@ cmd/load/main.go            # CLI flags·JSON 결과
 internal/lab/server.go      # /fast, /slow, /cpu
 internal/lab/load.go        # Worker·Transport·bounded histogram
 internal/lab/lab_test.go    # endpoint·분위수·종료/실패/연결 회귀
-scripts/run.py             # 최초 전체 실험 실행 기록의 원본 runner
+scripts/run.py             # 전체 실험 runner; 측정 당시 원문은 로컬 결과에 보존
 scripts/resume.py          # 이번 누락 7회만 재개, atomic JSON·checkpoint
 scripts/analyze.py         # 원본 검증·CSV/표/그래프 생성
 scripts/test_*.py           # 저장·분석의 작은 자체 검사
@@ -71,11 +71,13 @@ Apple M2 Pro(8P+4E), 메모리 32GiB, macOS 27.0.1, Go 1.27.2. 서버/클라이�
 # 기존 디렉터리에서 누락분만 채우는 명령(완료한 이번 자료에는 재실행 불필요)
 python3 scripts/resume.py
 # 처음부터 새 환경에서 재현할 때만 비어 있는 별도 출력 디렉터리 사용
-python3 scripts/run.py --out results/new-run --hey /path/to/hey
+python3 scripts/run.py --out results/new-run --hey
 # 기존 원본에서 분석만 재생성
 python3 -m unittest discover -s scripts -p 'test_*.py'
 python3 scripts/analyze.py
 ```
+
+`--out`은 이 Lab의 `results/` 내부 새 디렉터리만 허용한다. `--hey`는 PATH에 설치한 `hey`만 사용하며 임의 실행 파일 경로를 받지 않는다. resumer도 고정된 공용 임시 경로의 실행 파일을 자동 실행하지 않는다. 변경된 runner로 기존 측정 결과를 재생성하지 않았으며, 당시 원문·도구 경로·수치는 로컬 결과에 보존한다.
 
 분석 스크립트는 matplotlib가 필요하다. 이번에는 저장소 밖 임시 venv의 matplotlib 3.11.2를 사용했다. Go 실행에는 plotting 의존성이 필요 없다. p50/p95/p99 요약은 **각 반복의 분위수 산술평균**이며 모든 요청을 합친 분위수로 오해하지 않는다. CV는 표본 표준편차/평균×100이며 3회만으로 신뢰구간이나 원인을 주장하지 않는다.
 
