@@ -32,7 +32,7 @@ jobs:
 
       - name: Install dependencies
         working-directory: apps/api
-        run: npm ci
+        run: npm ci --ignore-scripts
 
       - name: Test
         working-directory: apps/api
@@ -60,7 +60,7 @@ jobs:
 
       - name: Install dependencies
         working-directory: apps/api
-        run: npm ci
+        run: npm ci --ignore-scripts
 
       - name: Deploy to Cloudflare Workers
         uses: cloudflare/wrangler-action@9acf94ace14e7dc412b076f2c5c20b8ce93c79cd # v3

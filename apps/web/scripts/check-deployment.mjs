@@ -1,20 +1,21 @@
 import assert from 'node:assert/strict'
+import { deploymentTarget } from './deployment-target.mjs'
 import { createHash } from 'node:crypto'
 import { readFile } from 'node:fs/promises'
 
-const base = process.argv[2]
+const baseInput = process.argv[2]
 const headers = {
   Accept: 'text/html',
   'User-Agent': 'Mozilla/5.0 (compatible; PortfolioDeploymentCheck/1.0)',
 }
-assert.ok(
-  base,
-  'Usage: node scripts/check-deployment.mjs https://portfolio.example.com',
-)
+assert.ok(baseInput, 'Usage: node scripts/check-deployment.mjs https://leeeeeoy.xyz')
+const base = deploymentTarget(baseInput)
 if (process.argv.includes('--protected')) {
   const response = await fetch(base, { redirect: 'manual', headers })
   if (response.status === 302) {
-    assert.match(response.headers.get('location'), /\.cloudflareaccess\.com\//)
+    const location = new URL(response.headers.get('location'))
+    assert.equal(location.protocol, 'https:')
+    assert.ok(location.hostname.endsWith('.cloudflareaccess.com'))
   } else {
     assert.equal(response.status, 403, 'Unauthenticated preview must be denied')
     const body = await response.text()
@@ -38,6 +39,7 @@ const redirectTarget = process.argv
   .find((arg) => arg.startsWith('--redirect-to='))
   ?.split('=')[1]
 if (redirectTarget) {
+  const redirectBase = deploymentTarget(redirectTarget)
   for (const path of [
     '/',
     '/?lang=en',
@@ -50,7 +52,7 @@ if (redirectTarget) {
     assert.equal(response.status, 301, path)
     assert.equal(
       response.headers.get('location'),
-      new URL(path, redirectTarget).href,
+      new URL(path, redirectBase).href,
       path,
     )
   }
@@ -73,7 +75,10 @@ for (const path of [
   '/notes/',
   '/notes/missing/',
 ].flatMap((path) => [path, `${path}?lang=en`])) {
-  const response = await fetch(new URL(path, base), { headers })
+  const response = await fetch(new URL(path, base), {
+    headers,
+    redirect: 'manual',
+  })
   assert.equal(response.status, 200, path)
   assert.equal(response.headers.get('x-content-type-options'), 'nosniff', path)
   assert.equal(response.headers.get('x-frame-options'), 'DENY', path)
@@ -106,7 +111,10 @@ for (const path of [
     assert.ok(body.includes(asset), `${path}: current build ${asset}`)
 }
 for (const path of assets) {
-  const response = await fetch(new URL(path, base), { headers })
+  const response = await fetch(new URL(path, base), {
+    headers,
+    redirect: 'manual',
+  })
   assert.equal(response.status, 200, path)
   assert.match(
     response.headers.get('cache-control'),

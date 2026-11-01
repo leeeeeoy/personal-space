@@ -20,7 +20,7 @@ git diff --check
 
 ```bash
 cd apps/web
-npm ci
+npm ci --ignore-scripts
 npm run content:check
 npm run lint
 npm run format:check
@@ -35,7 +35,7 @@ Node 버전은 `apps/web/.nvmrc`(26)과 일치시킨다. 명령의 원본은 `ap
 
 ```bash
 cd apps/api
-npm ci
+npm ci --ignore-scripts
 npm test
 npm run typecheck
 ```
@@ -69,6 +69,8 @@ go test -race ./...  # race 분석이 가능한 플랫폼/설정에서
 
 세 workflow의 외부 Actions는 2026-10-31 공식 저장소 major ref를 조회한 40자리 commit SHA로 고정했다. 주석의 major는 갱신 참고용이다. 갱신할 때 공식 ref/commit과 변경 내용을 검토한 뒤 SHA를 함께 바꾼다. checkout은 `persist-credentials: false`, workflow 권한은 `contents: read`를 유지하며 배포 Secret은 push 전용 deploy job에서만 사용한다. 서명 메타데이터 확인이나 SHA 고정은 Action 소스 전체 감사·호스팅 CI 실행을 대신하지 않는다.
 
+`npm ci --ignore-scripts`로 Web/API의 quality·deploy job에서 의존성 lifecycle 실행을 차단한다. esbuild/workerd는 플랫폼 패키지가 포함된 새 설치에서 테스트·빌드를 확인한다. 향후 설치 hook이 필요해지면 해당 lockfile·코드를 검토하며 전체 hook을 일괄 허용하지 않는다.
+
 Web/API의 공유 `CLOUDFLARE_FRONTEND_API_TOKEN`은 기존 통합 결정을 유지한다. 실제 권한은 로컬 Wrangler OAuth와 다른 인증이므로 로컬 `whoami` 결과로 최소 권한을 주장하지 않는다. 다음 승인된 릴리스 전 배포 토큰의 정확한 account/zone 제한, Workers 배포·route 편집·기존 R2 설정 읽기 외 불필요한 권한, GitHub required checks/Secret 접근 범위를 확인한다. 토큰 재발급·Secret 교체·원격 보호 규칙 변경은 별도 승인 범위다.
 
 ## 수동 품질 점검
@@ -79,7 +81,7 @@ Web/API의 공유 `CLOUDFLARE_FRONTEND_API_TOKEN`은 기존 통합 결정을 유
 - `?lang=en` UI에서 한국어 글만 있는 경우 언어 표시/폴백
 - 기존 Cloudflare Access Preview 보호, `workers.dev`/preview URL 공개 범위
 - Clarity 동의(동의 전 미로딩), R2 이미지, 리다이렉션/SEO 경로
-- `apps/web/scripts/check-deployment.mjs` 사용 시 경로와 검사 주소를 실제 구성에 맞게 확인
+- `apps/web/scripts/check-deployment.mjs`는 프로젝트의 HTTPS 호스트 네 개 또는 숫자 HTTP loopback만 검사한다. URL 내 자격 증명과 원격 비표준 포트는 거절하며 redirect를 따라가지 않는다. `--protected`의 Access 판정도 파싱한 HTTPS hostname을 사용한다.
 
 ## 브라우저 보안 헤더
 
