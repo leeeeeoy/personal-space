@@ -54,7 +54,7 @@ test('language links, metadata, and rendered pages work in both languages', asyn
   )
   Object.defineProperty(globalThis, 'localStorage', {
     configurable: true,
-    value: { getItem: () => null },
+    value: { getItem: () => null, setItem() {}, removeItem() {} },
   })
   const server = await createServer({
     server: { middlewareMode: true, hmr: false, ws: false },

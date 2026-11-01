@@ -14,55 +14,17 @@ import NotFoundPage from './pages/NotFoundPage'
 import { getPage, portfolioSections } from './routes'
 import { loadVisitStats } from './visits'
 
-const CLARITY_PROJECT_ID = 'xti7rw64s1'
-const CLARITY_CONSENT_KEY = 'portfolio-analytics-consent-v2'
+import {
+  getSavedConsent,
+  loadClarity,
+  saveConsent,
+  stopClarity,
+  subscribeConsent,
+  type Consent,
+} from './analytics'
+
 const THEME_KEY = 'portfolio-theme'
-const PRODUCTION_HOST = 'leeeeeoy.xyz'
-
-type Consent = 'granted' | 'denied'
 type Theme = 'light' | 'dark'
-type Clarity = ((command: string, options?: Record<string, string>) => void) & {
-  q?: unknown[][]
-}
-
-declare global {
-  interface Window {
-    clarity?: Clarity
-  }
-}
-
-function loadClarity() {
-  if (
-    window.location.hostname !== PRODUCTION_HOST ||
-    document.querySelector('script[data-clarity]')
-  ) {
-    return
-  }
-
-  window.clarity ??= (...args: unknown[]) => {
-    window.clarity!.q ??= []
-    window.clarity!.q!.push(args)
-  }
-  window.clarity('consentv2', {
-    ad_Storage: 'denied',
-    analytics_Storage: 'granted',
-  })
-
-  const script = document.createElement('script')
-  script.async = true
-  script.dataset.clarity = CLARITY_PROJECT_ID
-  script.src = `https://www.clarity.ms/tag/${CLARITY_PROJECT_ID}`
-  document.head.append(script)
-}
-
-function getSavedConsent(): Consent | null {
-  try {
-    const consent = localStorage.getItem(CLARITY_CONSENT_KEY)
-    return consent === 'granted' || consent === 'denied' ? consent : null
-  } catch {
-    return null
-  }
-}
 
 function applyTheme(theme: Theme) {
   document.documentElement.dataset.theme = theme
@@ -73,9 +35,8 @@ function applyTheme(theme: Theme) {
 }
 
 export default function App() {
-  const initialConsent = getSavedConsent()
-  const [consent, setConsent] = useState<Consent | null>(initialConsent)
-  const [showConsent, setShowConsent] = useState(initialConsent === null)
+  const [consent, setConsent] = useState<Consent | null>(getSavedConsent)
+  const [showConsent, setShowConsent] = useState(consent === null)
   const [theme, setTheme] = useState<Theme>(() =>
     document.documentElement.dataset.theme === 'dark' ? 'dark' : 'light',
   )
@@ -85,6 +46,19 @@ export default function App() {
   useEffect(() => {
     if (consent === 'granted') loadClarity()
   }, [consent])
+
+  useEffect(
+    () =>
+      subscribeConsent((nextConsent) => {
+        if (nextConsent !== 'granted') {
+          stopClarity()
+          void loadVisitStats('denied')
+        }
+        setConsent(nextConsent)
+        setShowConsent(nextConsent === null)
+      }),
+    [],
+  )
 
   useEffect(() => {
     const elements = document.querySelectorAll('[data-reveal]')
@@ -129,20 +103,8 @@ export default function App() {
   }, [page])
 
   const chooseConsent = (nextConsent: Consent) => {
-    try {
-      localStorage.setItem(CLARITY_CONSENT_KEY, nextConsent)
-    } catch {
-      // The current-page choice still applies when browser storage is unavailable.
-    }
-
-    if (nextConsent === 'denied' && window.clarity) {
-      window.clarity('consentv2', {
-        ad_Storage: 'denied',
-        analytics_Storage: 'denied',
-      })
-      void loadVisitStats('denied').finally(() => window.location.reload())
-      return
-    }
+    saveConsent(nextConsent)
+    if (nextConsent === 'denied') stopClarity()
 
     setConsent(nextConsent)
     setShowConsent(false)

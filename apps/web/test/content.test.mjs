@@ -270,13 +270,17 @@ test('public portfolio content includes approved contact and excludes private da
   }
 })
 
-test('Clarity loads only after consent and only on production', () => {
-  assert.match(appSource, /xti7rw64s1/)
-  assert.match(appSource, /leeeeeoy\.xyz/)
-  assert.match(appSource, /analytics_Storage: 'granted'/)
-  assert.match(appSource, /analytics_Storage: 'denied'/)
+test('Clarity loads only after consent and only on production', async () => {
+  const analyticsSource = await readFile(
+    new URL('../src/analytics.ts', import.meta.url),
+    'utf8',
+  )
+  assert.match(analyticsSource, /xti7rw64s1/)
+  assert.match(analyticsSource, /leeeeeoy\.xyz/)
+  assert.match(analyticsSource, /analytics_Storage: 'granted'/)
+  assert.match(analyticsSource, /analytics_Storage: 'denied'/)
   assert.match(appSource, /if \(consent === 'granted'\) loadClarity\(\)/)
-  assert.match(appSource, /localStorage\.setItem\(CLARITY_CONSENT_KEY/)
+  assert.match(analyticsSource, /localStorage\.setItem\(CLARITY_CONSENT_KEY/)
 })
 
 test('theme follows the system preference and remembers an explicit choice', () => {
