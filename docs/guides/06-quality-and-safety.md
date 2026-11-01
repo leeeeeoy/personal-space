@@ -85,7 +85,11 @@ Web/API의 공유 `CLOUDFLARE_FRONTEND_API_TOKEN`은 기존 통합 결정을 유
 
 Static Assets의 `_headers`는 frame/object 차단과 함께 `base-uri 'none'`, `form-action 'none'`, `script-src-attr 'none'`를 적용한다. 현재 UI는 네트워크 form 제출·HTML inline event 속성·base 태그가 필요 없다. 구조 안내의 `form method="dialog"`는 문서 이동 없이 대화상자만 닫는다. 배포 검증 스크립트도 세 directive를 확인한다.
 
-이것은 전체 script allowlist가 아니다. 초기 테마 inline script와 동의 후 Clarity script는 기존대로 허용된다. `script-src`를 더 제한하려면 테마 bootstrap 및 실제 Clarity 하위 요청을 별도 Preview에서 검사하고 hash/허용 출처를 결정한다. 로컬 헤더 검사를 운영 CSP 또는 실제 Clarity 수집 검증으로 보고하지 않는다.
+`script-src`는 먼저 **Report-Only**로 관찰한다. 자기 출처, `www.clarity.ms`, `scripts.clarity.ms`, `static.cloudflareinsights.com`만 허용한 관찰 정책이며 추가 보고 서버는 두지 않는다. 초기 테마는 `public/theme.js`를 동기 로딩해 적용한다. 배포 검사는 관찰 정책 유지와 테마 파일 해시·캐시도 확인한다. Report-Only는 스크립트 실행을 막지 않으므로 XSS 방어 완료로 보고하지 않는다.
+
+운영 HTML에는 Cloudflare의 Web Analytics와 inline JavaScript Detections가 주입된다. 후자의 nonce 없는 inline bootstrap은 엄격한 `script-src`에서 차단된다. 강제 적용 전 동적 nonce 등 주입 스크립트와의 호환 경로를 검증하며, 통과시키기 위해 `unsafe-inline`을 추가하거나 보안 감지를 끄지 않는다. [Cloudflare의 CSP 제약](https://developers.cloudflare.com/cloudflare-challenges/challenge-types/javascript-detections/), [Web Analytics CSP](https://developers.cloudflare.com/web-analytics/faq/)를 따른다. 로컬 대조군·헤더 검사를 실제 edge 주입 또는 Clarity 수집 검증으로 대체하지 않는다.
+
+분석 동의는 `src/analytics.ts`가 저장·동기화한다. 다른 문서의 localStorage 변경·삭제도 반영하며, 철회 시 Clarity에 `consentv2` denied와 `stop`을 전달하고 방문 API 쿠키를 철회한다. 저장이 실패하면 이전 허용값 제거를 시도하고 현재 페이지 선택을 적용한다. 저장된 허용값은 저장소에 쓸 수 있을 때만 자동 적용한다. [Clarity ConsentV2](https://learn.microsoft.com/en-us/clarity/setup-and-installation/clarity-consent-api-v2)의 denied는 제한된 무쿠키 추적을 허용하므로 그것만으로 분석 종료를 주장하지 않는다.
 
 ## 콘텐츠 보안/개인정보
 

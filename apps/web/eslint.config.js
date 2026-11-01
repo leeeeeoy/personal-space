@@ -16,7 +16,7 @@ export default defineConfig([
     extends: [tseslint.configs.recommended],
   },
   {
-    files: ['src/**/*.{ts,tsx}'],
+    files: ['src/**/*.{ts,tsx}', 'public/theme.js'],
     languageOptions: { globals: globals.browser },
   },
   {

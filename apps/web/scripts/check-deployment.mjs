@@ -61,9 +61,9 @@ const html = await readFile(
   new URL('../dist/index.html', import.meta.url),
   'utf8',
 )
-const assets = [...html.matchAll(/(?:src|href)="(\/assets\/[^"]+)"/g)].map(
-  ([, path]) => path,
-)
+const assets = [
+  ...html.matchAll(/(?:src|href)="(\/(?:assets\/[^"]+|theme\.js))"/g),
+].map(([, path]) => path)
 assert.ok(assets.length >= 2)
 for (const path of [
   '/',
@@ -91,6 +91,11 @@ for (const path of [
       `${path}: ${directive}`,
     )
   }
+  assert.equal(
+    response.headers.get('content-security-policy-report-only'),
+    "script-src 'self' https://www.clarity.ms https://scripts.clarity.ms https://static.cloudflareinsights.com",
+    `${path}: script policy must remain report-only until edge injection is validated`,
+  )
   assert.match(response.headers.get('cache-control'), /max-age=0/, path)
   const body = await response.text()
   assert.ok(
@@ -105,7 +110,7 @@ for (const path of assets) {
   assert.equal(response.status, 200, path)
   assert.match(
     response.headers.get('cache-control'),
-    /max-age=31536000, immutable/,
+    path.startsWith('/assets/') ? /max-age=31536000, immutable/ : /max-age=0/,
     path,
   )
   const actual = Buffer.from(await response.arrayBuffer())

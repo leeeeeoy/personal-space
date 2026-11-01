@@ -3,6 +3,7 @@
   X-Frame-Options: DENY
   Referrer-Policy: strict-origin-when-cross-origin
   Permissions-Policy: camera=(), microphone=(), geolocation=()
+  Content-Security-Policy-Report-Only: script-src 'self' https://www.clarity.ms https://scripts.clarity.ms https://static.cloudflareinsights.com
   Content-Security-Policy: frame-ancestors 'none'; object-src 'none'; base-uri 'none'; form-action 'none'; script-src-attr 'none'
 
 /assets/*

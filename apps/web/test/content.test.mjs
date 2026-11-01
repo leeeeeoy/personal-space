@@ -283,9 +283,41 @@ test('Clarity loads only after consent and only on production', async () => {
   assert.match(analyticsSource, /localStorage\.setItem\(CLARITY_CONSENT_KEY/)
 })
 
-test('theme follows the system preference and remembers an explicit choice', () => {
-  assert.match(htmlSource, /prefers-color-scheme: dark/)
-  assert.match(htmlSource, /localStorage\.getItem\('portfolio-theme'\)/)
+test('theme follows the system preference and remembers an explicit choice', async () => {
+  assert.match(htmlSource, /<script src="\/theme\.js"><\/script>/)
+  const source = await readFile(
+    new URL('../public/theme.js', import.meta.url),
+    'utf8',
+  )
+  for (const [saved, systemDark, blocked, expected] of [
+    ['dark', false, false, 'dark'],
+    ['light', true, false, 'light'],
+    ['invalid', true, false, 'dark'],
+    ['dark', false, true, 'light'],
+  ]) {
+    const documentElement = { dataset: {}, style: {} }
+    let themeColor
+    vm.runInNewContext(source, {
+      matchMedia: () => ({ matches: systemDark }),
+      localStorage: {
+        getItem() {
+          if (blocked) throw new Error('blocked')
+          return saved
+        },
+      },
+      document: {
+        documentElement,
+        querySelector: () => ({
+          setAttribute: (_, value) => {
+            themeColor = value
+          },
+        }),
+      },
+    })
+    assert.equal(documentElement.dataset.theme, expected)
+    assert.equal(documentElement.style.colorScheme, expected)
+    assert.equal(themeColor, expected === 'dark' ? '#000000' : '#ffffff')
+  }
   assert.match(appSource, /localStorage\.setItem\(THEME_KEY, nextTheme\)/)
   assert.match(stylesSource, /:root\[data-theme=['"]dark['"]\]/)
 })
