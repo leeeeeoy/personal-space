@@ -58,7 +58,7 @@ go test -race ./...  # race 분석이 가능한 플랫폼/설정에서
 - 웹 라우트: `/`, `/portfolio/`, `/lab/`, `/writing/`, 글 상세 및 404/호환 route
 - Portfolio 기존 경력/프로젝트 자료 회귀 검사
 - 개인정보·토큰 커밋 방지(`.gitignore` + git diff 검토; 향후 필요 시 secret scan)
-- 변경 경로별 CI 트리거: `apps/web/**` + `content/lab/**` + `content/writing/**` → Web QA/배포, `apps/api/**` → Backend QA/배포. Entry·Guide·하네스 검사 변경 → Harness QA만 실행한다. `labs/**`·docs/templates-only는 두 앱 workflow 대상이 아니다. Lab 전용 CI는 현재 없으므로 실험별 로컬 검사를 기록한다.
+- push의 변경 경로별 CI 트리거: `apps/web/**` + `content/lab/**` + `content/writing/**` → Web QA/배포, `apps/api/**` → Backend QA/배포. Entry·Guide·하네스 검사 변경 → Harness QA만 실행한다. `labs/**`·docs/templates-only는 두 앱 workflow 대상이 아니다. Lab 전용 CI는 현재 없으므로 실험별 로컬 검사를 기록한다. PR은 main/develop 대상일 때 경로와 관계없이 Web/API/Harness QA를 모두 실행해 필수 검사 누락으로 Pending이 남지 않게 한다. 문서만 바뀐 PR도 세 QA가 실행되며 PR 배포는 하지 않는다.
 - GitHub Actions에서는 PR에 배포하지 않는다. 기존 main=Production, develop=Preview 의미 유지.
 
 ## 의존성과 CI 유지

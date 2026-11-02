@@ -8,7 +8,10 @@ const headers = {
   Accept: 'text/html',
   'User-Agent': 'Mozilla/5.0 (compatible; PortfolioDeploymentCheck/1.0)',
 }
-assert.ok(baseInput, 'Usage: node scripts/check-deployment.mjs https://leeeeeoy.xyz')
+assert.ok(
+  baseInput,
+  'Usage: node scripts/check-deployment.mjs https://leeeeeoy.xyz',
+)
 const base = deploymentTarget(baseInput)
 if (process.argv.includes('--protected')) {
   const response = await fetch(base, { redirect: 'manual', headers })

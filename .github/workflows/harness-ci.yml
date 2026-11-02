@@ -14,15 +14,6 @@ on:
       - '.github/workflows/harness-ci.yml'
   pull_request:
     branches: [main, develop]
-    paths:
-      - 'AGENTS.md'
-      - 'CLAUDE.md'
-      - 'README.md'
-      - 'ARCHITECTURE.md'
-      - 'docs/**'
-      - 'templates/**'
-      - 'scripts/**'
-      - '.github/workflows/harness-ci.yml'
 
 permissions:
   contents: read
