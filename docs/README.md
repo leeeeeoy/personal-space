@@ -42,6 +42,7 @@ Guides는 현재 규칙의 원본입니다. 현재 구현 사실은 실제 소�
 - [19 문서·하네스와 보안 소스 점검](archive/work-records/19-harness-security-review-2026-10-31.md) — 변경 범위별 검증·문서 CI·부분 보안 감사와 후속 개선
 - [20 보안 개선과 검증](archive/work-records/20-security-improvements-2026-10-31.md) — API 자원 제한·의존성·CI/CSP·Lab 로컬 경계와 릴리스 전 잔여 검증
 - [21 보안 개선 릴리스](archive/work-records/21-security-release-2026-10-31.md) — 운영/Preview 버전·CI·HTTP 확인·롤백 기준과 잔여 검증
+- [22 보안 후속 개선과 관측](archive/work-records/22-security-followup-2026-11-02.md) — 동의 철회·설치 hook·Lab 경계·main 필수 검사와 잔여 관측
 - [기존 포트폴리오 개편 문서](archive/portfolio-renewal/README.md) — 과거 Pages·단일 페이지 제안 포함
 - [최초 모노레포 제안 진입 문서](archive/migration-proposal/00-READ-ME-FIRST.md)
 
