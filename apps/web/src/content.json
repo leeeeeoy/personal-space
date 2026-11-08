@@ -6,7 +6,7 @@
       "role": "Software Engineer",
       "email": "hoheho18@gmail.com",
       "headline": "서비스를 만들고,\n운영 중 생긴 문제를 해결해 왔습니다.",
-      "intro": "Flutter로 Android·iOS 앱을 주로 개발하고 운영해 왔습니다. React 예약 웹과 Spring Boot 서버 API도 구현하며 예약 데이터 정합성과 성능을 개선하고 테스트·배포를 자동화했습니다.",
+      "intro": "Flutter로 Android·iOS 서비스를 개발하고 운영해 왔습니다. 최근에는 React 예약·검사 웹과 Spring Boot API도 맡아 앱과 상담센터 사이의 예약 데이터를 연결하고 권한·환불 처리와 테스트·배포 과정을 보완했습니다.",
       "links": [
         {
           "label": "GitHub",
@@ -36,8 +36,8 @@
         "organization": "유쾌한프로젝트",
         "title": "상담센터 운영 서버와 예약 웹 구축",
         "paragraphs": [
-          "CMS 초기 구축에 참여해 Java·Spring Boot로 상담센터의 예약·상담일지·스케줄·결제 API를 구현했습니다.",
-          "React·TypeScript로 상품 탐색부터 예약·변경·취소까지 지원하는 웹을 개발했습니다. 센터별 데이터 범위와 내 예약 인증을 연결했습니다. 웹은 AWS Amplify에 배포했습니다."
+          "CMS 초기 구축에 참여해 Java·Spring Boot로 상담센터의 예약·상담일지·스케줄·결제 API를 구현했습니다. 이후 기존 권한 체계 안에서 계정 상태에 따른 접근 범위와 수납·환불 처리를 보완했습니다.",
+          "React·TypeScript로 상품 탐색부터 예약·변경·취소까지 지원하는 웹을 개발하고 AWS Amplify에 배포했습니다. 센터별 정보와 예약 인증을 연결했으며 최근에는 센터별 제공을 위한 설정과 화면을 보완했습니다."
         ]
       },
       {
@@ -63,7 +63,7 @@
         "website": "https://clify.co.kr/",
         "role": "Software Engineer",
         "period": "2025.04 — 현재",
-        "summary": "심리상담·검사 플랫폼의 모바일 앱과 웹 서비스를 개발하고 운영합니다. 상담센터 운영 서버의 초기 구축에 참여했으며 예약 연동과 데이터 정합성 개선, 테스트·배포 자동화를 담당했습니다.",
+        "summary": "심리상담·검사 플랫폼의 Flutter 모바일 앱과 웹 서비스를 개발하고 운영합니다. 상담센터 운영 서버의 초기 구축에 참여한 뒤 예약 연동, 권한·수납·환불 처리와 검사 웹을 보완하고 테스트·배포를 자동화했습니다.",
         "metrics": [
           {
             "value": "0→76.5%",
@@ -76,44 +76,43 @@
         ],
         "caseStudies": [
           {
-            "title": "서로 다른 DB의 예약 연동과 동시 취소 처리",
-            "problem": "서로 다른 DB의 예약을 연결해야 했고, 이후 동시 취소와 일정 변경·취소 경합에서 중복 처리·교착·상태 불일치를 다뤄야 했습니다.",
-            "analysis": "두 시스템을 하나의 DB 트랜잭션으로 묶을 수 없어 연동 API·식별자 연결·상태 전파의 경계를 구분했습니다. 후속 취소 처리에서는 잠금 순서를 일관되게 유지하고, 취소가 커밋된 뒤에 알림을 보내도록 해야 했습니다.",
-            "action": "초기 예약 연동 API와 식별자 연결, 배치 가용성 조회·역검색, 검사 웹 예약 경로를 구현했습니다. AI 코딩 도구와 랩 재현을 활용해 취소 멱등 반환, 회원 → 예약의 잠금 순서, 커밋 후 취소 알림을 보완했습니다.",
-            "result": "선택한 포인트 결제·취소 경합을 랩에서 재현하고 예약·포인트·환불 상태를 재검증했습니다. 카드 결제, 콜백 유실과 보상 실패는 별도 검증 대상입니다."
-          },
-          {
-            "title": "AI 활용 테스트 기반 구축과 오류 주입 검증",
-            "problem": "핵심 사용자 흐름의 회귀 검증을 수동으로 반복했고, 자동화 이후에도 테스트가 놓치는 경계값과 실행 순서 의존성이 있었습니다.",
-            "analysis": "반복 검증이 필요한 유즈케이스와 외부 PG 의존 여부를 먼저 구분했습니다. 이후 커버리지와 결함 검출력은 다른 문제라고 보고, 선택한 로직에 오류를 넣어 테스트 반응을 확인했습니다.",
-            "action": "AI 코딩 도구로 Unit·Widget·Patrol E2E 테스트 기반을 만들고 GitHub Actions·SonarQube·LCOV를 연결했습니다. 경계값·포인트 결제·환불·재생 추적 로직에 수동으로 오류를 주입해 테스트가 검출하는지 확인했습니다. 날짜나 실행 순서에 영향을 받던 테스트 3건을 수정하고 CI에서 테스트를 무작위 순서로 실행하도록 했습니다.",
-            "result": "초기 구축 당시 LCOV 라인 커버리지는 0% → 76.5%였습니다. 이후 선택한 로직의 오류 변형 19건 중 검출 수가 8건 → 17건으로 늘었습니다. 앱 전체의 결함 검출률은 아닙니다. 나머지 2건은 불필요한 코드 제거 1건과 다른 가드가 보호하는 변형 1건입니다. 실제 API 계약 검증과 실제 객체를 연결한 통합 테스트는 추가 확인이 필요합니다."
-          },
-          {
-            "title": "FAV 키오스크 · 현장 배포 제약을 고려한 업데이트",
-            "problem": "현장 키오스크의 화면과 사용자 흐름이 자주 바뀌어, 수정할 때마다 단말에 APK를 다시 설치하는 운영 부담이 있었습니다. 업데이트가 진행 중인 측정을 방해해서도 안 됐습니다.",
-            "analysis": "카메라·마이크 권한과 TTS·STT만 네이티브 기능이 필요했고, 화면과 측정·결과 처리는 웹으로 구현할 수 있었습니다. 다만 측정 중에는 새 버전 때문에 화면이 다시 로드되지 않아야 했습니다.",
-            "action": "Flutter 앱은 WebView와 네이티브 기능 연결만 맡기고, 화면과 상태·API 처리는 React 웹앱에 구현했습니다. Amplify에 새 버전이 배포되면 대기 화면에서만 확인하고 다시 로드하도록 했습니다.",
-            "result": "화면이나 사용자 흐름을 바꿀 때 APK를 다시 배포할 필요가 없어졌고, 측정 중인 사용자를 방해하지 않고 새 버전을 적용할 수 있게 됐습니다."
+            "title": "상담센터 운영 API와 권한·환불 처리 보완",
+            "problem": "상담센터의 기본 업무 API를 구축한 뒤 계정 상태에 따른 접근 범위와 결제별 수납·환불 처리를 보완해야 했습니다.",
+            "action": "Java·Spring Boot CMS 초기 구축에 참여해 로그인·예약·상담일지·스케줄·결제 API와 센터별 데이터 구분을 구현했습니다. 이후 계정·상담사의 현재 상태로 권한을 계산해 화면에 연결하고 쿠키 기반 세션의 갱신·로그아웃 경합을 보완했습니다. 결제별 수납 차감액을 기록하고 환불 시 복구 한도를 적용했으며 상담일지 열람 사유·기록과 주호소·사전·사후 심각도 입력도 연결했습니다.",
+            "result": "기존 역할·권한 체계 안에서 담당 고객·본인 예약 확인을 상태 변경보다 먼저 수행하도록 보완하고 회귀 테스트를 추가했습니다. 환불은 실제 수납 차감액까지만 복구하며, 차감 기록이 없는 기존 결제는 근사 처리합니다. 최근 변경은 2026년 11월 7일 개발 브랜치에 반영된 코드를 확인한 범위로 설명합니다. 운영 보안 검증이나 피해 감소를 측정한 결과는 아닙니다."
           },
           {
             "title": "Clify Connect 예약 웹과 Spring API 개발",
             "problem": "모바일 앱 외에 B2C 예약 웹에서도 예약 전 과정을 제공해야 했습니다.",
-            "action": "React 19·TypeScript로 상품 탐색·상담사 선택·예약·변경·취소 화면을 개발했습니다. Spring Connect 모듈·V2 연동과 센터·내 예약 인증을 구현하고, 분석 화면 마스킹과 동의 절차를 적용했습니다.",
-            "result": "AWS Amplify로 개발·운영 환경에 배포하고 커스텀 도메인을 설정했습니다. 모의 API를 사용하는 Playwright 테스트와 로직 테스트로 주요 화면과 요청을 확인했습니다. 실제 API 통합과 외부 고객의 예약·결제 성과는 별도 검증 대상입니다."
+            "action": "React 19·TypeScript로 상품 탐색·상담사 선택·예약·변경·취소 화면을 개발했습니다. Spring Connect 모듈·V2 연동과 센터·내 예약 인증을 구현하고 분석 화면 마스킹과 동의 절차를 적용했습니다. 센터별 로고·법인·약관·예약금 응답을 화면에 반영하고 서버가 정한 변경·취소 가능 조건에 맞춰 버튼과 센터 문의 안내를 표시하도록 보완했습니다.",
+            "result": "AWS Amplify로 개발·운영 환경에 배포하고 커스텀 도메인을 설정했습니다. 모의 API를 사용하는 Playwright 테스트와 로직 테스트로 주요 화면과 요청을 확인했습니다. 실제 API 통합과 외부 고객의 예약·결제 성과는 별도 검증 대상입니다. 최근 센터별 제공 준비는 개발 브랜치에 반영된 코드 기준입니다."
           },
           {
-            "title": "리마인더 발송 경로와 중복 처리 보완",
-            "problem": "데이터 암호화 이후 기존 알림 작업이 읽는 값과 발송 경로가 맞지 않아 리마인더가 실패하는 경로를 확인했습니다.",
-            "analysis": "복호화 키를 다른 실행 환경으로 확산하기보다, 이미 필요한 데이터를 읽고 발송할 수 있는 기존 서버 경로를 재사용하기로 했습니다.",
-            "action": "기존 V2 아웃박스에 리마인더 이벤트를 연결하고 예약 변경·취소 재계획과 발송 직전 상태 재검증을 적용했습니다. 같은 시각의 서로 다른 예약 알림이 합쳐지지 않도록 SQS FIFO 중복 제거 키에 예약 식별자를 반영하고 회귀 테스트를 추가했습니다.",
-            "result": "예약 변경·취소에 맞춰 알림을 다시 계획하고, 큐 적재 실패가 성공으로 기록되지 않도록 했습니다. 큐 적재와 실제 수신은 구분하며, 이관 후 최종 전달 성공률은 아직 측정하지 않았습니다."
+            "title": "검사 웹의 계약별 구성과 예약 연결",
+            "problem": "한 종류의 검사를 지원하던 웹에서 계약마다 다른 검사 구성·순서를 제공하고 해석상담 예약까지 연결해야 했습니다.",
+            "action": "기존 검사 웹을 인수해 여러 검사를 지원하고 응답 저장·복원·결과 조회를 처리하도록 확장했습니다. COM 설정의 검사 순서를 V2 응답과 검사·결과 화면에 연결하고 검사 없이 예약하는 경로와 서비스 이용권 사용·일정 변경·취소를 구현했습니다. R&D가 제공한 계산식·판정 기준을 코드로 옮기고 경계값 회귀 테스트를 작성했습니다.",
+            "result": "계약 설정부터 웹의 검사·예약 흐름까지 연결했습니다. 계산식 고안과 검사 타당도 연구는 R&D의 담당 범위입니다. 최근 계약·예약 확장은 개발 브랜치에 반영된 코드 기준이며 운영 DB 변경·배포·실사용 성과는 별도로 확인해야 합니다."
           },
           {
-            "title": "CMS 초기 API와 담당 데이터 검사",
-            "problem": "상담센터 운영에 로그인·예약·상담일지·스케줄·결제 기능이 필요했고, 외부 상담사에게는 담당 업무에 맞는 데이터 범위를 제공해야 했습니다.",
-            "action": "Java·Spring Boot CMS 초기 구축에 참여해 로그인·예약·상담일지·스케줄·결제 API와 센터별 데이터 구분을 구현했습니다.",
-            "result": "이후 기존 역할·권한 체계 안에서 담당 고객·본인 예약 확인이 환불 등 상태 변경보다 먼저 수행되도록 수정하고, 관련 회귀 테스트를 추가했습니다."
+            "title": "서로 다른 DB의 예약 연동과 동시 취소 처리",
+            "problem": "서로 다른 DB의 예약을 연결해야 했고 이후 동시 취소와 일정 변경·취소 경합에서 중복 처리·교착·상태 불일치를 다뤄야 했습니다.",
+            "analysis": "두 시스템을 하나의 DB 트랜잭션으로 묶을 수 없어 연동 API·식별자 연결·상태 전파의 경계를 구분했습니다. 후속 취소 처리에서는 잠금 순서를 일관되게 유지하고 취소가 커밋된 뒤에 알림을 보내도록 해야 했습니다.",
+            "action": "초기 예약 연동 API와 식별자 연결, 배치 가용성 조회·역검색, 검사 웹 예약 경로를 구현했습니다. AI 코딩 도구와 랩 재현을 활용해 취소 멱등 반환, 회원 → 예약의 잠금 순서, 커밋 후 취소 알림을 보완했습니다. 현재 예약 생성·실패 보상 처리와 슬롯 겹침 검사의 주요 구현은 다른 개발자의 기여와 구분합니다.",
+            "result": "선택한 포인트 결제·취소 경합을 랩에서 재현하고 예약·포인트·환불 상태를 재검증했습니다. 카드 결제, 콜백 유실과 보상 실패는 별도 검증 대상입니다."
+          },
+          {
+            "title": "FAV 키오스크 · 현장 배포 제약을 고려한 업데이트",
+            "problem": "현장 키오스크의 화면과 사용자 흐름이 자주 바뀌어 수정할 때마다 단말에 APK를 다시 설치하는 운영 부담이 있었습니다. 업데이트가 진행 중인 측정을 방해해서도 안 됐습니다.",
+            "analysis": "카메라·마이크 권한과 TTS·STT만 네이티브 기능이 필요했고 화면과 측정·결과 처리는 웹으로 구현할 수 있었습니다. 다만 측정 중에는 새 버전 때문에 화면이 다시 로드되지 않아야 했습니다.",
+            "action": "Flutter 앱은 WebView와 네이티브 기능 연결만 맡기고 화면과 상태·API 처리는 React 웹앱에 구현했습니다. Amplify에 새 버전이 배포되면 대기 화면에서만 확인하고 다시 로드하도록 했습니다. 앱의 Android 측정 경로에서는 표시 화면·프레임 버퍼 간 크롭 좌표 변환과 0바이트 영상 오류를 수정하고 회귀 테스트를 추가했습니다. 공통 측정 모듈은 검출기 준비 뒤 시간 제한이 시작되도록 보완했습니다.",
+            "result": "화면이나 사용자 흐름을 바꿀 때 APK를 다시 배포할 필요가 없어졌고 측정 중인 사용자를 방해하지 않고 새 버전을 적용할 수 있게 됐습니다. 촬영·준비 시점 보완은 특정 오류의 수정이며, 전체 측정 완료율이나 크래시율의 개선 수치는 확인하지 않았습니다."
+          },
+          {
+            "title": "자동화 테스트 구축과 놓친 오류 보완",
+            "problem": "핵심 사용자 흐름의 회귀 검증을 수동으로 반복했고 자동화 이후에도 테스트가 놓치는 경계값과 실행 순서 의존성이 있었습니다.",
+            "analysis": "반복 검증이 필요한 유즈케이스와 외부 PG 의존 여부를 먼저 구분했습니다. 이후 커버리지와 결함 검출력은 다른 문제라고 보고 선택한 로직에 오류를 넣어 테스트 반응을 확인했습니다.",
+            "action": "AI 코딩 도구로 Unit·Widget·Patrol E2E 테스트 기반을 만들고 GitHub Actions·SonarQube·LCOV를 연결했습니다. 경계값·포인트 결제·환불·재생 추적 로직에 수동으로 오류를 주입해 테스트가 검출하는지 확인했습니다. 날짜나 실행 순서에 영향을 받던 테스트 3건을 수정하고 CI에서 테스트를 무작위 순서로 실행하도록 했습니다. 후속 보강에서는 실제 TokenProvider의 저장·읽기·삭제 왕복, 라우트 생성과 비동기 예외 이후의 흐름을 검증했습니다.",
+            "result": "초기 구축 당시 LCOV 라인 커버리지는 0% → 76.5%였습니다. 이후 선택한 로직의 오류 변형 19건 중 검출 수가 8건 → 17건으로 늘었습니다. 앱 전체의 결함 검출률은 아닙니다. 나머지 2건은 불필요한 코드 제거 1건과 다른 가드가 보호하는 변형 1건입니다. 실제 API 계약 검증과 실제 객체를 연결한 통합 테스트는 추가 확인이 필요합니다."
           },
           {
             "title": "Android·iOS 배포 자동화",
@@ -134,13 +133,12 @@
           }
         ],
         "highlights": [
-          "검사 웹을 다종 검사·계약별 구성으로 확장하고 응답 저장·복원과 예약을 연결했습니다. R&D가 제공한 채점 기준을 코드로 옮기고 경계값 회귀 테스트를 작성했습니다.",
+          "암호화 이후 실패하던 리마인더는 복호화 키를 다른 환경으로 확산하지 않고 기존 V2 아웃박스에 연결했습니다. 예약 변경·취소 재계획과 발송 직전 상태 재검증을 적용하고 같은 시각의 서로 다른 알림이 합쳐지지 않도록 SQS FIFO 중복 제거 키에 예약 ID를 반영해 회귀 테스트를 추가했습니다. 큐 적재 실패를 성공으로 기록하지 않도록 했으며 이관 후 최종 수신 성공률은 측정하지 않았습니다.",
           "Clify Insight 통계 화면과 집계 API에 기간별 사람당 최신 측정, 측정 당시 소속과 소수 표본 마스킹을 적용했습니다. 소속 정보가 없는 과거 데이터는 현재 소속을 사용하는 한계가 있습니다.",
-          "Android FAV에서 표시 화면과 프레임 버퍼의 좌표 차이를 추적했습니다. 크롭 좌표 변환을 수정해 0바이트 영상 오류를 처리하고 회귀 테스트를 추가했습니다.",
           "단일 Flutter 앱에서 melos와 중복 계층, 역할 없는 Use Case를 제거했습니다. Repository·Bloc 중심으로 필요한 책임만 나눴습니다.",
-          "GitHub Actions와 AWS로 서버 빌드·패키징·이미지 업로드·배포·상태 확인을 자동화했습니다.",
+          "Backend V2·CMS의 GitHub Actions와 AWS 배포 흐름을 구성했습니다. 빌드·패키징·이미지 업로드·배포·상태 확인에 더해 CMS는 헬스 확인 실패 시 직전 이미지로 복구하도록 보완했습니다. 이미지 복구는 DB·환경 설정까지 되돌리는 전체 복구와 구분합니다.",
           "디자이너와 Git 기반 기획·디자인 자료, Figma MCP를 AI 코딩 도구에 연결했습니다. 요구사항 정리와 대안 비교, 통합·배포 및 주요 경로 확인을 맡았습니다.",
-          "GA4·BigQuery 이벤트와 운영 DB·오류 모니터링을 교차 분석해 이탈·반복 오류를 확인했습니다. 이벤트·실패 사유 추적을 정의하고 일부 적용했으며, 전환율·매출 개선 효과는 아직 검증하지 않았습니다."
+          "GA4·BigQuery 이벤트와 운영 DB·오류 모니터링을 교차 분석해 이탈·반복 오류를 확인했습니다. 이벤트·실패 사유 추적을 정의하고 일부 적용했으며 전환율·매출 개선 효과는 아직 검증하지 않았습니다."
         ],
         "skills": [
           "Flutter",
@@ -168,7 +166,7 @@
           },
           {
             "area": "Backend",
-            "description": "CMS 초기 구축에서 업무 API와 예약 연동을 맡았습니다. 이후 기존 권한 체계 안에서 담당 데이터 범위 검사를 추가했습니다."
+            "description": "CMS 초기 업무 API와 예약 연동을 맡고 기존 권한 체계 안에서 계정별 접근 범위·세션·수납 환불·상담 기록 처리를 보완했습니다."
           },
           {
             "area": "Reliability",
@@ -181,7 +179,7 @@
         "website": "https://www.seoulexchange.kr/",
         "role": "Software Engineer",
         "period": "2024.04 — 2025.04",
-        "summary": "비상장 주식 거래 Flutter 앱을 별도 인수인계 자료 없이 파악해 개발·운영했습니다. 기존 앱을 운영하면서 신입 개발자와 새 앱을 함께 개발해 스토어 미출시 상태로 출시 직전 검증까지 마쳤고, 메모리 사용량과 외부 서비스 연동 문제를 개선했습니다.",
+        "summary": "비상장 주식 거래 Flutter 앱을 별도 인수인계 자료 없이 파악해 개발·운영했습니다. 기존 앱을 운영하면서 신입 개발자와 새 앱을 함께 개발해 출시 직전 검증까지 마쳤습니다. 새 앱은 스토어에 출시하지 않았으며 메모리 개선은 동일 기기에서 비교한 결과입니다.",
         "metrics": [
           {
             "value": "100K+",
@@ -259,7 +257,7 @@
           {
             "title": "React Native 앱의 Flutter 재구축과 출시",
             "problem": "기존에 React Native로 개발 중이던 앱을 Flutter로 다시 개발하기로 결정해, 주요 사용자 흐름을 처음부터 구현하고 스토어 출시까지 연결해야 했습니다.",
-            "action": "거주지 등록·세대 인증·자동이체·전자투표를 비롯한 주요 기능을 구현하고, 출시 준비와 스토어 배포 이후 기능 개선·운영 이슈 대응을 이어갔습니다.",
+            "action": "거주지 등록·세대 인증·전자투표와 계좌·ARS 인증을 포함한 자동이체 신청·변경·해지 화면을 구현했습니다. 사용자 입력과 인증 결과, 서버 처리 상태에 따라 완료·오류 안내와 재시도 흐름을 연결하고 출시 이후 기능 개선·운영 이슈 대응을 이어갔습니다.",
             "result": "2022년 9월 Flutter 앱을 출시했고, 이후 시니어 개발자 퇴사 후에는 앱을 주로 담당하며 2024년 4월까지 기능 개발과 운영을 이어갔습니다."
           },
           {
@@ -443,7 +441,6 @@
       "context": "상황과 조건",
       "decision": "구현",
       "outcome": "결과",
-      "details": "주요 업무와 기술적 배경 보기",
       "problem": "문제",
       "analysis": "판단 근거",
       "action": "실행",
@@ -536,7 +533,7 @@
       "role": "Software Engineer",
       "email": "hoheho18@gmail.com",
       "headline": "Building services.\nSolving problems in production.",
-      "intro": "Most of my experience is in building and maintaining Android and iOS apps with Flutter. I have also developed React booking websites and Spring Boot APIs, improved booking data consistency and performance, and automated tests and releases.",
+      "intro": "I build and maintain Android and iOS services with Flutter. More recently, I have also worked on React booking and assessment websites and Spring Boot APIs, connecting booking data between the app and counseling centers and improving authorization, refund handling, testing, and releases.",
       "links": [
         {
           "label": "GitHub",
@@ -566,8 +563,8 @@
         "organization": "Simpatico Project",
         "title": "Building center operations APIs and a booking website",
         "paragraphs": [
-          "I contributed to the initial CMS build, implementing counseling-center booking, counseling-note, schedule, and payment APIs in Java/Spring Boot.",
-          "With React/TypeScript, I developed a website covering product browsing, booking, rescheduling, and cancellation. I connected center-scoped data access and booking authentication, then deployed the website to AWS Amplify."
+          "I contributed to the initial CMS build, implementing counseling-center booking, counseling-note, schedule, and payment APIs in Java/Spring Boot. I later refined account-based access and receipt/refund handling within the existing authorization structure.",
+          "I developed a React/TypeScript website covering product browsing, booking, rescheduling, and cancellation, then deployed it to AWS Amplify. I connected center information and booking authentication, and later updated settings and screens to prepare for use by individual centers."
         ]
       },
       {
@@ -593,7 +590,7 @@
         "website": "https://clify.co.kr/",
         "role": "Software Engineer",
         "period": "2025.04 — Present",
-        "summary": "I develop and maintain mobile apps and web services for a counseling and assessment platform. I contributed to the initial counseling-center backend and handled booking integration, data consistency improvements, testing, and release automation.",
+        "summary": "I develop and maintain Flutter mobile apps and web services for a counseling and assessment platform. After contributing to the initial counseling-center backend, I worked on booking integration, authorization, receipts and refunds, assessment websites, and test and release automation.",
         "metrics": [
           {
             "value": "0→76.5%",
@@ -606,44 +603,43 @@
         ],
         "caseStudies": [
           {
+            "title": "Counseling-center APIs, authorization, and refund handling",
+            "problem": "After building the core APIs for center operations, account-based access and payment-specific receipt and refund handling needed further work.",
+            "action": "I contributed to the initial Java/Spring Boot CMS build, implementing login, booking, counseling-note, schedule, and payment APIs, plus center-level data separation. I later connected permissions calculated from current account and counselor state to the UI and addressed refresh/logout races in cookie-based sessions. I recorded receipt deductions per payment, limited restoration on refund, and connected note-access reasons and logs, presenting concerns, and pre/post severity fields.",
+            "result": "Within the existing role and authorization structure, I placed assigned-customer and own-booking checks before state changes and added regression tests. Refunds restore no more than the recorded receipt deduction; older payments without that record use an approximation. Recent changes were confirmed in development branches as of November 7, 2026; production security and reductions in harm have not been measured."
+          },
+          {
+            "title": "Clify Connect booking website and Spring APIs",
+            "problem": "The complete booking flow needed to be available through a B2C website as well as the mobile app.",
+            "action": "I developed React 19/TypeScript interfaces for product browsing, counselor selection, booking, rescheduling, and cancellation. I also implemented the Spring Connect module, V2 integration, center and booking authentication, analytics masking, and consent. I also connected center-specific logos, legal details, terms, and booking deposits to the UI, and used server-provided change/cancellation eligibility to show actions or center-contact guidance.",
+            "result": "I configured AWS Amplify deployments for development and production environments and custom domains. I checked key screens and requests with Playwright tests using mock APIs and logic tests. Real API integration and external-customer booking/payment outcomes require separate verification. Recent preparation for center-specific use is limited to changes reflected in development branches."
+          },
+          {
+            "title": "Contract-specific assessments and booking on the web",
+            "problem": "A website supporting one assessment needed to handle contract-specific assessment sets and ordering, as well as consultation booking.",
+            "action": "I took over the existing assessment website and extended it to multiple assessments, response persistence and recovery, and result lookup. I connected assessment ordering from COM settings through V2 responses to assessment and result screens, and implemented booking without assessments, service-pass use, rescheduling, and cancellation. I translated R&D-provided scoring formulas and classification rules into code and added boundary regression tests.",
+            "result": "I connected contract configuration to the web assessment and booking flows. R&D owns formula design and assessment-validity research. Recent contract and booking extensions are described from code reflected in development branches; production database changes, deployment, and customer outcomes require separate confirmation."
+          },
+          {
             "title": "Cross-database booking integration and concurrent cancellation",
             "problem": "Bookings in separate databases needed to be linked. Later, concurrent cancellation and schedule-change races exposed duplicate handling, deadlocks, and inconsistent states.",
             "analysis": "The systems could not share one database transaction, so I separated integration APIs, ID mapping, and state propagation. Cancellation handling also needed consistent lock ordering and notifications sent only after the cancellation committed.",
-            "action": "I implemented the initial integration APIs and ID mapping, batch availability lookup, reverse search, and assessment-web booking path. Using AI coding tools and lab reproduction, I improved idempotent cancellation responses, member-before-booking lock ordering, and post-commit cancellation notifications.",
+            "action": "I implemented the initial integration APIs and ID mapping, batch availability lookup, reverse search, and assessment-web booking path. Using AI coding tools and lab reproduction, I improved idempotent cancellation responses, member-before-booking lock ordering, and post-commit cancellation notifications. The main implementations of current booking creation, failure compensation, and slot-overlap checks include other developers’ contributions and are separate from this work.",
             "result": "Reproduced selected point-payment and cancellation races in the lab and rechecked booking, point-balance, and refund state. Card payments, lost callbacks, and failed compensation require separate validation."
-          },
-          {
-            "title": "AI-assisted testing and manual fault injection",
-            "problem": "Core user journeys needed repeated manual regression checks. Even after automation, boundary gaps and execution-order dependencies remained.",
-            "analysis": "I first scoped repeatable use cases and external payment dependencies. Later, I treated coverage and fault detection as different questions and checked how tests responded to injected faults in selected logic.",
-            "action": "Using AI coding tools, I built Unit, Widget, and Patrol E2E tests and connected GitHub Actions, SonarQube, and LCOV. I manually injected faults into boundary, point-payment, refund, and playback-tracking logic to check whether tests caught them. I fixed three tests affected by dates or execution order and randomized test order in CI.",
-            "result": "Initial LCOV line coverage rose from 0% to 76.5%. Later, detection increased from 8 to 17 of 19 fault variants in selected logic; this is not an app-wide defect detection rate. The other two involved one unnecessary code removal and one variant protected by another guard. Further checks are needed for real API-contract validation and integration tests using real components."
           },
           {
             "title": "FAV kiosk · Updating on-site devices without interrupting measurements",
             "problem": "Frequent changes to the kiosk screens and user journey required reinstalling the APK on each device. Updates also had to avoid interrupting measurements in progress.",
             "analysis": "Only camera and microphone permissions, text-to-speech, and speech-to-text required native integration. Screens, measurement, and result processing could run on the web, provided a new version did not reload the screen mid-session.",
-            "action": "I limited the Flutter app to a WebView and native integrations, and built the UI, state, and API handling in React. The app checked for new Amplify deployments and reloaded only on the idle screen.",
-            "result": "Changes to screens and user flows no longer required reinstalling the APK, and new versions could be applied without interrupting a measurement session."
+            "action": "I limited the Flutter app to a WebView and native integrations, and built the UI, state, and API handling in React. The app checked for new Amplify deployments and reloaded only on the idle screen. In the app’s Android measurement path, I fixed crop-coordinate conversion between the display and frame buffer, addressed zero-byte video output, and added regression tests. In the shared measurement module, I moved the start of the time limit until after detector readiness.",
+            "result": "Changes to screens and user flows no longer required reinstalling the APK, and new versions could be applied without interrupting a measurement session. Capture and readiness changes address specific errors; improvements in overall measurement completion or crash rates have not been established."
           },
           {
-            "title": "Clify Connect booking website and Spring APIs",
-            "problem": "The complete booking flow needed to be available through a B2C website as well as the mobile app.",
-            "action": "I developed React 19/TypeScript interfaces for product browsing, counselor selection, booking, rescheduling, and cancellation. I also implemented the Spring Connect module, V2 integration, center and booking authentication, analytics masking, and consent.",
-            "result": "I configured AWS Amplify deployments for development and production environments and custom domains. I checked key screens and requests with Playwright tests using mock APIs and logic tests. Real API integration and external-customer booking/payment outcomes require separate verification."
-          },
-          {
-            "title": "Reminder delivery paths and deduplication",
-            "problem": "After data encryption, the values read by the existing reminder job no longer matched what the delivery path needed.",
-            "analysis": "Rather than distribute decryption keys to another runtime, I reused an existing server path that could read the required data and send messages.",
-            "action": "I connected reminders to the existing V2 outbox, rescheduled changed/cancelled bookings, and rechecked state before sending. I included booking identity in the SQS FIFO deduplication key so separate reminders at the same time would not collapse, and added regression tests.",
-            "result": "Reminder plans follow booking changes and cancellations, and queue failures are no longer recorded as success. Queue acceptance and recipient delivery are distinct; post-migration final delivery rates have not been measured."
-          },
-          {
-            "title": "Initial CMS APIs and assigned-data checks",
-            "problem": "Center operations needed login, booking, counseling-note, schedule, and payment features, with appropriate assigned-data scope for external counselors.",
-            "action": "I contributed to the initial Java/Spring Boot CMS build, implementing login, booking, counseling-note, schedule, and payment APIs, plus center-level data separation.",
-            "result": "Later, within the existing role and authorization structure, I placed assigned-customer and own-booking checks before state-changing actions such as refunds and added regression tests."
+            "title": "Building automated tests and covering missed faults",
+            "problem": "Core user journeys needed repeated manual regression checks. Even after automation, boundary gaps and execution-order dependencies remained.",
+            "analysis": "I first scoped repeatable use cases and external payment dependencies. Later, I treated coverage and fault detection as different questions and checked how tests responded to injected faults in selected logic.",
+            "action": "Using AI coding tools, I built Unit, Widget, and Patrol E2E tests and connected GitHub Actions, SonarQube, and LCOV. I manually injected faults into boundary, point-payment, refund, and playback-tracking logic to check whether tests caught them. I fixed three tests affected by dates or execution order and randomized test order in CI. Follow-up tests covered storage/read/delete round trips with the real TokenProvider, route construction, and continuation after asynchronous exceptions.",
+            "result": "Initial LCOV line coverage rose from 0% to 76.5%. Later, detection increased from 8 to 17 of 19 fault variants in selected logic; this is not an app-wide defect detection rate. The other two involved one unnecessary code removal and one variant protected by another guard. Further checks are needed for real API-contract validation and integration tests using real components."
           },
           {
             "title": "Automating Android and iOS releases",
@@ -664,11 +660,10 @@
           }
         ],
         "highlights": [
-          "Extended assessment websites for multiple tests and contract-specific configurations, connecting response persistence and booking. Implemented R&D-provided scoring rules and boundary regression tests.",
+          "I moved reminders that failed after encryption to the existing V2 outbox without distributing decryption keys to another runtime. I rescheduled changed/cancelled bookings, rechecked state before sending, and added booking IDs to SQS FIFO deduplication keys with regression tests. Queue failures are not recorded as success; final recipient delivery rates after migration have not been measured.",
           "Implemented per-person latest measurements by period, affiliation at measurement time, and small-sample masking in Clify Insight reporting interfaces and APIs. Historical records without affiliation data still use current affiliation as a fallback.",
-          "Traced display-to-frame-buffer coordinate differences in Android FAV. Fixed crop-coordinate conversion and zero-byte video output, then added regression tests.",
           "Removed melos, duplicate layers, and use cases without a distinct role from a single Flutter app, keeping necessary responsibilities around repositories and Bloc.",
-          "Automated server builds, packaging, image uploads, deployment, and health checks with GitHub Actions and AWS.",
+          "I built GitHub Actions and AWS delivery flows for Backend V2 and CMS, including builds, packaging, image uploads, deployment, and health checks. CMS can restore the previous image after a failed health check; image restoration does not roll back database or environment changes.",
           "Worked with a designer to connect Git-based planning/design materials and Figma MCP to AI coding tools. I handled requirements, alternatives, integration, deployment, and key-flow checks.",
           "Cross-analyzed GA4/BigQuery events, operational databases, and error monitoring to identify drop-offs and repeated errors. Defined and partly implemented event and failure-reason tracking; conversion and revenue effects remain unverified."
         ],
@@ -698,7 +693,7 @@
           },
           {
             "area": "Backend",
-            "description": "Business APIs and booking integration during the initial CMS build, followed by assigned-data checks within the existing authorization structure."
+            "description": "Initial CMS business APIs and booking integration, followed by account-scoped access, sessions, receipt refunds, and counseling-record handling within the existing authorization structure."
           },
           {
             "area": "Reliability",
@@ -711,7 +706,7 @@
         "website": "https://www.seoulexchange.kr/",
         "role": "Software Engineer",
         "period": "2024.04 — 2025.04",
-        "summary": "I took over development and maintenance of a Flutter app for trading unlisted stocks without handover documentation. While maintaining the live app, I worked with a junior developer to bring a replacement to pre-release validation without a store release. I also reduced memory use and improved integrations with external services.",
+        "summary": "I took over development and maintenance of a Flutter app for trading unlisted stocks without handover documentation. While maintaining the live app, I worked with a junior developer to bring a replacement to pre-release validation. The replacement was not released to stores; its memory improvement was measured on the same device.",
         "metrics": [
           {
             "value": "100K+",
@@ -789,7 +784,7 @@
           {
             "title": "Rebuilding and launching a React Native app in Flutter",
             "problem": "Once the team decided to replace the React Native app under development with Flutter, we needed to rebuild the main user journeys and prepare the app for release on the app stores.",
-            "action": "I implemented address registration, household verification, direct debit, electronic voting, and other core features, then continued with launch preparation, store releases, feature improvements, and operational fixes.",
+            "action": "I implemented address registration, household verification, electronic voting, and direct-debit setup, changes, and cancellation, including bank-account and ARS authentication. I connected user input, authentication results, and server state to completion, error, and retry flows, then continued feature improvements and operational fixes after launch.",
             "result": "We released the Flutter app in September 2022. After the senior developer left, I took primary responsibility for the app and continued development and operations through April 2024."
           },
           {
@@ -973,7 +968,6 @@
       "context": "Context & constraints",
       "decision": "Implementation",
       "outcome": "Result",
-      "details": "Explore the work and technical decisions",
       "problem": "Problem",
       "analysis": "Rationale",
       "action": "Action",
