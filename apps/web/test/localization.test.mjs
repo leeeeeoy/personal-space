@@ -101,6 +101,15 @@ test('language links, metadata, and rendered pages work in both languages', asyn
         '/src/components/SiteChrome.tsx',
       )
       const portfolio = renderToStaticMarkup(createElement(PortfolioPage))
+      const experienceSection = portfolio
+        .split('<div class="timeline">')[1]
+        ?.split('<section class="section projects-section"')[0]
+      assert.ok(experienceSection)
+      assert.doesNotMatch(experienceSection, /<details|<summary|data-reveal/)
+      assert.equal(
+        (experienceSection.match(/class="experience-details"/g) ?? []).length,
+        translations[language].experiences.length,
+      )
       const impactSection = portfolio
         .split('class="impact-grid"')[1]
         ?.split('</section>')[0]
@@ -122,16 +131,25 @@ test('language links, metadata, and rendered pages work in both languages', asyn
             ?.split('</article>')[0]
           assert.ok(section, study.title)
           assert.equal(
-            section.includes(`<dt>${translations[language].ui.analysis}</dt>`),
+            section.includes('class="case-analysis"'),
             Boolean(study.analysis),
-            'Only cases with an actual rationale render a rationale row',
+            'Only cases with an actual rationale render a rationale paragraph',
           )
-          for (const field of ['problem', 'action', 'result'])
+          for (const [field, className] of [
+            ['problem', 'case-context'],
+            ['analysis', 'case-analysis'],
+            ['action', undefined],
+            ['result', 'case-result'],
+          ]) {
+            if (!study[field]) continue
             assert.ok(
               section.includes(
-                renderToStaticMarkup(createElement('dd', null, study[field])),
+                renderToStaticMarkup(
+                  createElement('p', { className }, study[field]),
+                ),
               ),
             )
+          }
         }
       }
       const notes = renderToStaticMarkup(createElement(NotesPage))

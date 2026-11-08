@@ -122,7 +122,9 @@ test('public portfolio content includes approved contact and excludes private da
       JSON.stringify(experiences[0].metrics),
       /5K\+|7K\+|registered users|등록 사용자/,
     )
-    const booking = experiences[0].caseStudies[0]
+    const booking = experiences[0].caseStudies.find(({ title }) =>
+      /예약 연동|Cross-database/.test(title),
+    )
     const connect = experiences[0].caseStudies.find(({ title }) =>
       title.includes('Clify Connect'),
     )
@@ -130,10 +132,13 @@ test('public portfolio content includes approved contact and excludes private da
       title.includes('FAV'),
     )
     const quality = experiences[0].caseStudies.find(({ title }) =>
-      /오류 주입|fault injection/.test(title),
+      /자동화 테스트|automated tests/.test(title),
     )
     const cms = experiences[0].caseStudies.find(({ title }) =>
-      /CMS 초기|Initial CMS/.test(title),
+      /상담센터 운영 API|Counseling-center APIs/.test(title),
+    )
+    const inspection = experiences[0].caseStudies.find(({ title }) =>
+      /검사 웹의 계약별|Contract-specific assessments/.test(title),
     )
     assert.match(cms.action, /초기 구축에 참여|contributed to the initial/)
     assert.match(cms.action, /로그인.*예약.*결제|login.*booking.*payment/)
@@ -141,6 +146,12 @@ test('public portfolio content includes approved contact and excludes private da
       cms.result,
       /기존 역할·권한 체계|existing role and authorization/,
     )
+    assert.match(cms.action, /로그아웃|logout/)
+    assert.match(cms.result, /근사 처리|approximation/)
+    assert.match(cms.result, /개발 브랜치|development branches/)
+    assert.match(inspection.action, /R&D/)
+    assert.match(inspection.action, /이용권|service-pass/)
+    assert.match(inspection.result, /별도로 확인|separate confirmation/)
     assert.match(booking.title, /예약|booking/i)
     assert.match(booking.action, /초기 예약 연동 API|initial integration APIs/)
     assert.match(
@@ -249,7 +260,7 @@ test('public portfolio content includes approved contact and excludes private da
   assert.match(siteChromeSource, /<dialog/)
   assert.match(siteChromeSource, /Built with/)
   assert.match(siteChromeSource, /built-with-cloudflare\.svg/)
-  assert.match(siteChromeSource, /github-invertocat-white\.svg/)
+  assert.match(stylesSource, /github-invertocat-white\.svg/)
   assert.match(content.ui.architectureLegacy, /방문 합계.*API/)
   assert.deepEqual(
     content.profile.links.map(({ label }) => label),
@@ -328,7 +339,10 @@ test('motion is progressive and respects reduced-motion preferences', () => {
   assert.match(portfolioSource + notesPageSource, /data-reveal/)
   assert.match(stylesSource, /@keyframes hero-enter/)
   assert.match(stylesSource, /@keyframes disclosure-enter/)
-  assert.match(stylesSource, /@media \(hover: hover\) and \(pointer: fine\)/)
+  assert.match(
+    stylesSource,
+    /@media \(hover: hover\) and \(pointer: fine\) and \(prefers-reduced-motion: no-preference\)/,
+  )
   assert.match(stylesSource, /@media \(prefers-reduced-motion: reduce\)/)
 })
 

@@ -69,7 +69,7 @@ export default function PortfolioPage() {
         </div>
         <div className="impact-grid">
           {content.featuredImpacts.map((impact) => (
-            <article key={impact.title} data-reveal>
+            <article key={impact.title}>
               <p className="impact-organization">{impact.organization}</p>
               <h3>{impact.title}</h3>
               <div className="impact-copy">
@@ -89,11 +89,7 @@ export default function PortfolioPage() {
         </div>
         <div className="timeline">
           {content.experiences.map((experience, index) => (
-            <article
-              className="experience"
-              key={experience.company}
-              data-reveal
-            >
+            <article className="experience" key={experience.company}>
               <div className="experience-index" aria-hidden="true">
                 {String(index + 1).padStart(2, '0')}
               </div>
@@ -130,72 +126,56 @@ export default function PortfolioPage() {
                     </span>
                   ))}
                 </div>
-                <details className="disclosure">
-                  <summary>
-                    <span>{ui.details}</span>
-                    <span className="disclosure-action" aria-hidden="true" />
-                  </summary>
-                  <div className="disclosure-content">
-                    <div className="case-studies">
-                      {experience.caseStudies.map((caseStudy) => (
-                        <article className="case-study" key={caseStudy.title}>
-                          <h4>{caseStudy.title}</h4>
-                          <dl>
-                            <div>
-                              <dt>{ui.problem}</dt>
-                              <dd>{caseStudy.problem}</dd>
-                            </div>
-                            {'analysis' in caseStudy && (
-                              <div>
-                                <dt>{ui.analysis}</dt>
-                                <dd>{caseStudy.analysis}</dd>
-                              </div>
-                            )}
-                            <div>
-                              <dt>{ui.action}</dt>
-                              <dd>{caseStudy.action}</dd>
-                            </div>
-                            <div>
-                              <dt>{ui.result}</dt>
-                              <dd>{caseStudy.result}</dd>
-                            </div>
-                          </dl>
-                          {'flow' in caseStudy && caseStudy.flow && (
-                            <div
-                              className="case-flow"
-                              aria-label={`${caseStudy.title} ${ui.flow}`}
-                            >
-                              {caseStudy.flow.map((flow) => (
-                                <section key={flow.label}>
-                                  <h5>{flow.label}</h5>
-                                  <ol>
-                                    {flow.steps.map((step) => (
-                                      <li key={step}>{step}</li>
-                                    ))}
-                                  </ol>
-                                </section>
-                              ))}
-                            </div>
+                <div className="experience-details">
+                  <div className="case-studies">
+                    {experience.caseStudies.map((caseStudy) => (
+                      <article className="case-study" key={caseStudy.title}>
+                        <h4>{caseStudy.title}</h4>
+                        <div className="case-copy">
+                          <p className="case-context">{caseStudy.problem}</p>
+                          {'analysis' in caseStudy && (
+                            <p className="case-analysis">
+                              {caseStudy.analysis}
+                            </p>
                           )}
-                        </article>
-                      ))}
-                    </div>
-                    <h4 className="contribution-title">{ui.contributions}</h4>
-                    <ul className="contributions">
-                      {experience.highlights.map((highlight) => (
-                        <li key={highlight}>{highlight}</li>
-                      ))}
-                    </ul>
-                    <ul
-                      className="tags"
-                      aria-label={`${experience.company} ${ui.technologies}`}
-                    >
-                      {experience.skills.map((skill) => (
-                        <li key={skill}>{skill}</li>
-                      ))}
-                    </ul>
+                          <p>{caseStudy.action}</p>
+                          <p className="case-result">{caseStudy.result}</p>
+                        </div>
+                        {'flow' in caseStudy && caseStudy.flow && (
+                          <div
+                            className="case-flow"
+                            aria-label={`${caseStudy.title} ${ui.flow}`}
+                          >
+                            {caseStudy.flow.map((flow) => (
+                              <section key={flow.label}>
+                                <h5>{flow.label}</h5>
+                                <ol>
+                                  {flow.steps.map((step) => (
+                                    <li key={step}>{step}</li>
+                                  ))}
+                                </ol>
+                              </section>
+                            ))}
+                          </div>
+                        )}
+                      </article>
+                    ))}
                   </div>
-                </details>
+                  <h4 className="contribution-title">{ui.contributions}</h4>
+                  <ul className="contributions">
+                    {experience.highlights.map((highlight) => (
+                      <li key={highlight}>{highlight}</li>
+                    ))}
+                  </ul>
+                  <ul
+                    className="tags"
+                    aria-label={`${experience.company} ${ui.technologies}`}
+                  >
+                    {experience.skills.map((skill) => (
+                      <li key={skill}>{skill}</li>
+                    ))}
+                  </ul>
+                </div>
               </div>
             </article>
           ))}
@@ -209,7 +189,7 @@ export default function PortfolioPage() {
         </div>
         <div className="projects">
           {content.projects.map((project, index) => (
-            <article className="project" key={project.title} data-reveal>
+            <article className="project" key={project.title}>
               <div className="project-visual">
                 <span className="project-number" aria-hidden="true">
                   {String(index + 1).padStart(2, '0')}
@@ -281,7 +261,7 @@ export default function PortfolioPage() {
         </div>
         <div className="skill-grid">
           {content.skillGroups.map((group) => (
-            <article key={group.title} data-reveal>
+            <article key={group.title}>
               <p>{group.description}</p>
               <h3>{group.title}</h3>
               <ul>

@@ -105,7 +105,7 @@ export function SiteHeader({
           aria-label={theme === 'light' ? ui.darkTheme : ui.lightTheme}
           onClick={onToggleTheme}
         >
-          <ThemeIcon theme={theme} />
+          <ThemeIcon key={theme} theme={theme} />
           <span className="header-action-label">
             {theme === 'light' ? 'Dark' : 'Light'}
           </span>
@@ -116,12 +116,9 @@ export function SiteHeader({
           aria-label="GitHub"
           {...externalLinkProps}
         >
-          <img
-            className="header-icon"
-            src="/brand/github-invertocat-white.svg"
-            width="16"
-            height="16"
-            alt=""
+          <span
+            className="header-icon hero-link-icon--github"
+            aria-hidden="true"
           />
           <span className="header-action-label">GitHub</span>
           <Arrow />
